@@ -1,0 +1,158 @@
+:root{
+  --bg:#fff; --panel:#226BE3; --panel-green:#50C878;
+  --box:#E5E4E2; --ink:#000; --label:#fff; --line:#cfcfcf;
+}
+
+*{ box-sizing:border-box }
+body{ margin:0; background:var(--bg); color:var(--ink);
+      font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial }
+h1{ font-size:18px; margin:8px 0 0 }
+h2{ font-size:16px; margin:18px 0 8px; color:#222 }
+.wrap{ max-width:1500px; margin:28px auto; padding:16px }
+.bar{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px }
+
+.grid{ display:grid; grid-template-columns:repeat(4,minmax(320px,1fr)) 360px; gap:16px }
+.pill{ display:inline-block; border:1px solid var(--line); border-radius:999px; padding:6px 10px; background:#fff; color:#000 }
+.tiny{ font-size:12px }
+.pfv-label{ font-weight:700; font-size:24px }
+.pfv-value{ font-size:24px }
+.spacer{ height:12px }
+.gap{ height:8px }
+
+/* Controls */
+input[type="checkbox"]{ width:14px; height:14px }  /* global 14px checkbox */
+
+.card{
+  background:var(--panel); color:#fff; border:1px solid var(--line); border-radius:14px;
+  display:flex; flex-direction:column; padding:14px; min-height:560px;
+}
+.card.green{ background:var(--panel-green) }
+
+.card .title{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px }
+.card .title input{ width:56%; background:var(--box); border:1px solid #aaa; border-radius:10px; padding:8px 10px; color:#000 }
+
+label{ display:block; font-size:12px; color:var(--label); margin:8px 0 4px }
+
+/* 🔹 Only the “Starting balance” labels get a slight size bump */
+.label-starting{ font-size:14px; }
+
+input,select{ width:100%; padding:8px 10px; border:1px solid #aaa; border-radius:10px; background:var(--box); color:#000 }
+input::placeholder,select::placeholder{ color:#666 }
+.num{ font-variant-numeric:tabular-nums }
+.row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:end }
+
+.card-body{ display:flex; flex-direction:column; gap:0 }
+.card-footer{ margin-top:auto } /* keeps totals aligned at bottom across cards */
+
+.sumline{ display:flex; justify-content:space-between; gap:8px; margin:4px 0; font-variant-numeric:tabular-nums }
+.sumline strong:last-child{ text-align:right }
+
+/* Depletion banner (stays in footer so spacing rule applies) */
+.deplete{
+  background:#2f8f5b; color:#fff; border-radius:6px; display:block;
+  margin:14px auto 2px; /* top 14, bottom 2 */
+  text-align:center; padding:10px 36px; opacity:.95; font-size:12px;
+}
+.deplete div:first-child{ font-weight:700; }
+
+/* Extra space specifically between the banner and first total row */
+.card.green .deplete + .sumline{ margin-top:26px; }
+
+/* Company match block lines (top & bottom) */
+.match-block{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  margin:10px 0;
+  padding:10px 0;
+}
+
+/* Lock helper row under Starting balance (retirement only) */
+.lockrow{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin:6px 0 2px; color:#fff; font-size:12px;
+}
+
+/* Buttons */
+button{ appearance:none; background:var(--box); color:#000; border:1px solid var(--line); padding:10px 14px; border-radius:10px; cursor:pointer }
+
+@media (max-width:1100px){ .grid{ grid-template-columns:1fr } }
+@media (max-width:600px){
+  input,select,button{ font-size:16px }
+  .card{ padding:12px }
+  .card .title{ flex-direction:column; align-items:flex-start }
+  .card .title input{ width:100% }
+}
+/* ===== Flat controls: all boxes white; locked retirement start = gray ===== */
+
+/* Make all text/number inputs and selects pure white */
+input[type="text"],
+input[type="number"],
+select,
+.card .title input {
+  background:#FFFFFF !important;
+  color:#000;
+  border:1px solid #aaa;
+  border-radius:10px;
+  box-shadow:none;
+  appearance:auto;            /* undo any custom dropdown look */
+  -webkit-appearance:auto;
+  -moz-appearance:auto;
+  background-image:none;      /* remove custom arrows/gradients if any */
+}
+
+/* Keep disabled (locked) retirement starting balance gray */
+input[disabled] {
+  background:#E5E4E2 !important;
+  color:#000;
+}
+
+/* Optional: keep focus minimal (no green glow) */
+input:focus,
+select:focus {
+  outline:none;
+  box-shadow:none;
+}
+/* ===== Mobile optimizations (append-only) ===== */
+@media (max-width: 900px){
+  /* Single-column stacks (already true, but ensure both grids obey) */
+  .grid{ grid-template-columns: 1fr; }
+
+  /* Readability: slightly larger type on phones */
+  body{ font-size:16px; line-height:1.55; }
+  h1{ font-size:20px; }
+  h2{ font-size:18px; }
+
+  /* Spacious feel */
+  .card{ padding:18px; min-height:unset; }  /* let cards size naturally */
+  .row{ gap:12px; }                          /* a bit more breathing room */
+  .sumline{ margin:6px 0; }                  /* slightly more space between rows */
+  .pfv-label, .pfv-value{ font-size:22px; }  /* fits smaller screens nicely */
+
+  /* Keep the header from feeling cramped */
+  .bar{ align-items:flex-start; }
+
+  /* Float "Reset all to empty" at top-right on mobile */
+  #reset{
+    position: fixed;
+    top: calc(10px + env(safe-area-inset-top, 0px));
+    right: 12px;
+    z-index: 1000;
+    /* keep existing look; just ensure it stands above content */
+  }
+
+  /* Add a little padding so the floating reset button doesn’t overlap the title */
+  .wrap{
+    padding-top: 56px; /* adjust if you prefer more/less */
+  }
+
+  /* Make tap targets feel a hair larger on phones */
+  input, select, button{
+    min-height: 42px; /* comfy thumbs */
+  }
+}
+
+/* Optional: even smaller devices */
+@media (max-width: 360px){
+  .card .title input{ width:100%; }
+  .pfv-label, .pfv-value{ font-size:20px; }
+}
